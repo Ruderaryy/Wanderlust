@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listings</title>
+    <style>
+        /* Your CSS styles */
+        .filter {
+            text-align: center;
+            margin-right: 36px;
+            margin-top: 2.5rem;
+            opacity: 0.7;
+            cursor: pointer;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            font-style: bold;
+            font-size: 0.8rem;
+            font-weight: 500;
+            align-items: center; /* Align items to center */
+        }
+
+        .filter:hover {
+            opacity: 1;
+        }
+
+        .tax-info {
+            display: none; /* Initial state hidden */
+        }
+
+        .tax-toggle {
+            display: flex;
+            border: 1px solid black;
+            border-radius: 1rem;
+            height: 3.1rem;
+            padding: 1rem;
+            align-items: center;
+            margin-top: 1.7rem;
+            cursor: pointer;
+            margin-left: 12px;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+        }
+
+        .form-check-input {
+            width: 45px; /* Increased width */
+            height: 23px; /* Increased height */
+            cursor: pointer;
+            margin-right: 0px;
+            position: relative;
+            appearance: none;
+            background-color: #ccc;
+            border-radius: 12.5px;
+            transition: background-color 0.3s;
+        }
+
+        .form-check-input::before {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 23px;
+            background-color: #ccc;
+            border-radius: 12.5px;
+            transition: background-color 0.3s;
+        }
+
+        .form-check-input::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background-color: white;
+            border-radius: 50%;
+            top: 0.5px;
+            left: 1px;
+            transition: transform 0.3s;
+        }
+
+        .form-check-input:checked::before {
+            background-color: #4caf50;
+        }
+
+        .form-check-input:checked::after {
+            transform: translateX(21px);
+        }
+
+        .form-check-label {
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.7;
+            margin-bottom: 0; 
+            margin-left: 20px;
+            /* Align text vertically with switch */
+        }
+
+        .form-check-label:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <% layout("/layouts/boilerplate") %>
+    <div class="filters">
+        <div class="filter">
+            <div><i class="fa-solid fa-fire"></i></div>
+            <p>Trending</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-bed"></i></div>
+            <p>Rooms</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-mountain-city"></i></div>
+            <p>Mountain City</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-umbrella-beach"></i></div>
+            <p>Beach</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-brands fa-fort-awesome"></i></div>
+            <p>Castle</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-person-swimming"></i></div>
+            <p>Amazing Pools</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-cow"></i></div>
+            <p>Farm House</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-snowflake"></i></div>
+            <p>Arctic</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-sailboat"></i></div>
+            <p>Boats</p>
+        </div>
+        <div class="tax-toggle">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Display total after taxes</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1">
+        <% for (let listing of allListings) { %>
+            <a href="/listings/<%= listing._id %>" class="listing-link">
+                <div class="card col listing-card" style="width: 22rem;">
+                    <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height:20rem"/>
+                    <div class="card-img-overlay"></div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            <b><%= listing.title %></b>
+                            <br/>
+                            <% if (listing.price !== null && typeof listing.price !== 'undefined') { %>
+                                &#8377; <%= listing.price.toLocaleString("en-IN") %>/night;
+                                <i class="tax-info"> &nbsp; &nbsp;+18% GST</i>
+                            <% } else { %>
+                                Price not available
+                            <% } %>
+                        </p>
+                    </div>
+                </div>
+            </a>
+        <% } %>
+    </div>
+    
+
+    <script>
+        let taxSwitch = document.getElementById("flexSwitchCheckDefault");
+        taxSwitch.addEventListener("click", () => {
+            let taxInfo = document.getElementsByClassName("tax-info");
+            for (let info of taxInfo) {
+                info.style.display = taxSwitch.checked ? "inline" : "none";
+            }
+        });
+    </script>
+</body>
+</html>
